@@ -1,0 +1,94 @@
+/* Точечные изменения по страницам*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.font-inter-medium {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+
+.font-inter-bold {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 100%;
+    letter-spacing: 0%;
+}
+
+body.pagelayout-login h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+}
+
+/* http://localhost/login/index.php */
+a.custom-link-forgot-password,
+a.custom-link-forgot-password:link,
+a.custom-link-forgot-password:visited,
+a.custom-link-forgot-password:hover,
+a.custom-link-forgot-password:active,
+a.custom-link-forgot-password:focus {
+    color: #000000 !important;
+    text-decoration: none !important;
+    margin: 0 auto !important;
+}
+
+.login-form-submit {
+    text-align: center !important;
+}
+
+#loginbtn {
+    display: inline-block !important;
+    width: 150px !important;
+    padding: 3px 12px !important;
+    margin: 0 auto !important;
+}
+
+.login-form-forgotpassword {
+    text-align: center !important;
+}
+
+.login-form-username label {
+    margin-bottom: 0.5rem !important;
+    display: block;
+}
+
+.login-form-password label {
+    margin-bottom: 0.5rem !important;
+    display: block;
+}
+
+.form-control-lg {
+    border-radius: 1rem !important;
+    padding: 0.05rem 0.5rem !important; 
+    line-height: 1 !important;
+    font-size: 0.9rem !important;
+}
+
+
+/* Все ссылки */
+a {
+    color: #000000 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+a:hover {
+    font-weight: 600 !important;
+    text-decoration: underline !important; 
+}
+
+.footer-support-link a,
+footer a,
+#page-footer a {
+    color: #ffffff !important;
+}
+
+.footer-support-link a:hover,
+footer a:hover,
+#page-footer a:hover {
+    font-weight: 600 !important;
+    color: #ffffff !important; 
+}
