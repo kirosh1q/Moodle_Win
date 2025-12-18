@@ -1,0 +1,141 @@
+
+<button class="ai-chat-button" id="aiChatButton" aria-label="Открыть AI чат">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        <circle cx="9" cy="10" r="1.5"/>
+        <circle cx="15" cy="10" r="1.5"/>
+    </svg>
+</button>
+
+<div class="ai-chat-modal" id="aiChatModal">
+    <div class="ai-chat-container">
+        <div class="ai-chat-header">
+            <h3>AI Ассистент</h3>
+            <button class="ai-chat-close" id="aiChatClose" aria-label="Закрыть чат">×</button>
+        </div>
+
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message ai">
+                <div class="ai-message-bubble">
+                    Привет! Я AI-ассистент. Задай мне вопрос по документации курса.
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-typing" id="aiTyping">
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+        </div>
+
+        <div class="ai-chat-input-area">
+            <input
+                    type="text"
+                    class="ai-chat-input"
+                    id="aiChatInput"
+                    placeholder="Напишите сообщение..."
+                    autocomplete="off"
+            >
+            <button class="ai-chat-send" id="aiChatSend" aria-label="Отправить">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+    require(['jquery'], function($) {
+    const chatButton = $('#aiChatButton');
+    const chatModal = $('#aiChatModal');
+    const chatClose = $('#aiChatClose');
+    const chatMessages = $('#aiChatMessages');
+    const chatInput = $('#aiChatInput');
+    const chatSend = $('#aiChatSend');
+    const typingIndicator = $('#aiTyping');
+
+    // Открытие/закрытие чата
+    chatButton.on('click', function() {
+    chatModal.addClass('active');
+    chatInput.focus();
+    });
+
+    chatClose.on('click', function() {
+    chatModal.removeClass('active');
+    });
+
+    chatModal.on('click', function(e) {
+    if (e.target.id === 'aiChatModal') {
+    chatModal.removeClass('active');
+    }
+    });
+
+    // Отправка сообщения
+    async function sendMessage() {
+    const message = chatInput.val().trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    chatInput.val('');
+    chatSend.prop('disabled', true);
+    typingIndicator.addClass('active');
+
+    try {
+    const response = await fetch('http://localhost:3001/ai', {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+    model: 'nex-agi/deepseek-v3.1-nex-n1:free', // Бесплатная модель
+    messages: [
+    {
+    role: 'system',
+    content: 'Ты помощник для студентов курса робототехники. Отвечай кратко и по делу на русском языке.'
+    },
+    {
+    role: 'user',
+    content: message
+    }
+    ],
+    temperature: 0.7
+    })
+    });
+
+    const data = await response.json();
+    typingIndicator.removeClass('active');
+
+    // Получаем ответ из структуры OpenRouter
+    const reply = data?.choices?.[0]?.message?.content ||
+    data?.error?.message ||
+    'Не удалось получить ответ';
+
+    addMessage(reply, 'ai');
+
+    } catch (error) {
+    console.error('AI Error:', error);
+    typingIndicator.removeClass('active');
+    addMessage('Ошибка подключения к AI. Проверьте сервер.', 'ai');
+    }
+
+    chatSend.prop('disabled', false);
+    }
+
+
+    function addMessage(text, sender) {
+    const messageDiv = $('<div>').addClass('ai-message ' + sender);
+        const bubbleDiv = $('<div>').addClass('ai-message-bubble').text(text);
+            messageDiv.append(bubbleDiv);
+            chatMessages.append(messageDiv);
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+            }
+
+            chatSend.on('click', sendMessage);
+            chatInput.on('keypress', function(e) {
+            if (e.key === 'Enter') {
+            sendMessage();
+            }
+            });
+            });
+{{/js}}

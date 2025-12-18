@@ -1,0 +1,182 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    @template theme_robotics/columns2
+    Custom layout with collapsible left sidebar navigation
+}}
+
+{{> theme_boost/head }}
+
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+
+<div id="page-wrapper" class="d-print-block">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{> theme_boost/navbar }}
+
+    {{! ========== DRAWER СПРАВА ========== }}
+    {{#hasblocks}}
+        {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-blocks{{/id}}
+            {{$drawerclasses}}drawer drawer-right{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                <div class="d-print-none">
+                    {{{ addblockbutton }}}
+                    {{{ sidepreblocks }}}
+                </div>
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+            {{$forceopen}}{{#forceblockdraweropen}}1{{/forceblockdraweropen}}{{/forceopen}}
+            {{$drawerstate}}show-drawer-right{{/drawerstate}}
+            {{$tooltipplacement}}left{{/tooltipplacement}}
+            {{$drawercloseonresize}}1{{/drawercloseonresize}}
+            {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
+        {{/ theme_boost/drawer}}
+    {{/hasblocks}}
+    {{! ============================================== }}
+
+    {{! ========== ЛЕВ НАВ ========== }}
+    {{#roboticsnav.show}}
+    <div class="robotics-layout-container">
+        <aside class="robotics-sidebar" id="robotics-sidebar">
+            <nav class="robotics-nav">
+                <ul class="robotics-nav-list">
+                    {{#roboticsnav.items}}
+                        <li class="robotics-nav-item">
+                            <a href="{{{url}}}" class="robotics-nav-link {{#active}}active{{/active}}" title="{{{text}}}">
+                                <i class="fa {{icon}} fa-fw"></i>
+                                <span class="nav-text">{{{text}}}</span>
+                            </a>
+                        </li>
+                    {{/roboticsnav.items}}
+                </ul>
+            </nav>
+
+            <button class="robotics-sidebar-toggle" id="robotics-toggle" aria-label="Toggle sidebar">
+                <i class="fa fa-chevron-left"></i>
+                <span class="toggle-text">Свернуть</span>
+            </button>
+        </aside>
+
+    <div class="robotics-main-content" id="robotics-content">
+    {{/roboticsnav.show}}
+    {{! ========================================== }}
+
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
+        <div id="topofscroll" class="main-inner">
+            <div class="drawer-toggles d-flex">
+                {{#hasblocks}}
+                    <div class="drawer-toggler drawer-right-toggle ms-auto d-print-none">
+                        <button
+                            class="btn icon-no-margin"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_boost-drawers-blocks"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title="{{#str}}opendrawerblocks, core{{/str}}"
+                        >
+                            <span class="visually-hidden">{{#str}}opendrawerblocks, core{{/str}}</span>
+                            <span class="dir-rtl-hide">{{#pix}}t/blocks_drawer, core{{/pix}}</span>
+                            <span class="dir-ltr-hide">{{#pix}}t/blocks_drawer_rtl, core{{/pix}}</span>
+                        </button>
+                    </div>
+                {{/hasblocks}}
+            </div>
+            {{{ output.full_header }}}
+
+            {{#secondarymoremenu}}
+                <div class="secondary-navigation d-print-none">
+                    {{> core/moremenu}}
+                </div>
+            {{/secondarymoremenu}}
+
+            <div id="page-content" class="pb-3 d-print-block">
+                <div id="region-main-box">
+                    {{#hasregionmainsettingsmenu}}
+                        <div id="region-main-settings-menu" class="d-print-none">
+                            <div>{{{ regionmainsettingsmenu }}}</div>
+                        </div>
+                    {{/hasregionmainsettingsmenu}}
+
+                    <div id="region-main">
+                        {{#hasregionmainsettingsmenu}}
+                            <div class="region_main_settings_menu_proxy"></div>
+                        {{/hasregionmainsettingsmenu}}
+
+                        {{{ output.course_content_header }}}
+
+                        {{#headercontent}}
+                            {{> core/activity_header }}
+                        {{/headercontent}}
+
+                        {{#overflow}}
+                            <div class="container-fluid tertiary-navigation">
+                                <div class="navitem">
+                                    {{> core/url_select}}
+                                </div>
+                            </div>
+                        {{/overflow}}
+
+                        {{{ output.main_content }}}
+                        {{{ output.activity_navigation }}}
+                        {{{ output.course_content_footer }}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! ========== ЗАКРЫТИЕ КАСТОМНЫЙ LAYOUT ========== }}
+    {{#roboticsnav.show}}
+    </div><!-- .robotics-main-content -->
+    </div><!-- .robotics-layout-container -->
+    {{/roboticsnav.show}}
+    {{! ================================================== }}
+
+    {{{ output.standard_after_main_region_html }}}
+    {{> theme_boost/footer }}
+
+    {{! ========== AI CHAT ========== }}
+    {{#showaichat}}
+        {{> theme_robotics/ai_chat }}
+    {{/showaichat}}
+    {{! ============================== }}
+
+</div>
+
+</body>
+</html>
+
+{{#js}}
+    M.util.js_pending('theme_boost/loader');
+    require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
+    Drawer.init();
+    M.util.js_complete('theme_boost/loader');
+    });
+
+    // Скрипт для сворачивания навигации
+    require(['jquery'], function($) {
+    const sidebar = $('#robotics-sidebar');
+    const content = $('#robotics-content');
+    const toggle = $('#robotics-toggle');
+    const body = $('body');
+
+    // Проверяем сохранённое состояние
+    const isCollapsed = localStorage.getItem('robotics-sidebar-collapsed') === 'true';
+    if (isCollapsed) {
+    body.addClass('robotics-sidebar-collapsed');
+    }
+
+    // Обработчик клика
+    toggle.on('click', function() {
+    body.toggleClass('robotics-sidebar-collapsed');
+
+    // Сохраняем состояние
+    const collapsed = body.hasClass('robotics-sidebar-collapsed');
+    localStorage.setItem('robotics-sidebar-collapsed', collapsed);
+    });
+    });
+{{/js}}
