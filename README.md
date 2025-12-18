@@ -24,6 +24,8 @@
 - Все изменения изолированы в теме Classic
 - Совместимо с обновлениями Moodle
 - Адаптивный дизайн сохраняется
+<img width="1280" height="690" alt="image" src="https://github.com/user-attachments/assets/560a40c5-b7b6-4fcc-8299-8fa4996a46c9" />
+
 
 # Тема robotics для Moodle - актуальная версия
 ## Как использовать
