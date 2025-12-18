@@ -36,3 +36,4 @@
 - Совместимо с обновлениями Moodle
 - Адаптивный дизайн сохраняется
 - Спец фишки для темы
+<img width="1644" height="932" alt="image" src="https://github.com/user-attachments/assets/9f34657d-56dd-4913-b8e1-891f2ed99cd2" />
